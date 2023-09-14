@@ -17,7 +17,7 @@ TreeNode *stack[SIZE];
 
 void push(TreeNode *p) //left 방향으로 이동함
 {
-	if (top < SIZE - 1 && p != NULL)
+	if (top < SIZE - 1 && p != NULL )
 		stack[++top] = p;
 }
 TreeNode *pop()
@@ -85,21 +85,10 @@ void postorder(TreeNode *root){
 }
 
 
-
-TreeNode n11 = {NULL, 11, NULL};
-TreeNode n10 = {NULL, 10, NULL};
-TreeNode n9 = {NULL, 5, NULL};
-TreeNode n8 = {NULL, 4, NULL};
-TreeNode n7 = { &n10,9,&n11 };
-TreeNode n6 = { NULL,8,NULL };
-TreeNode n5 = { NULL,6,NULL };
-TreeNode n4 = { &n8,3,&n9 };
-TreeNode n3 = { &n6,7,&n7 };
-TreeNode n2 = { &n4,2,&n5 };
-TreeNode n1 = { &n2,1,&n3 };
-TreeNode* root = &n1;
 //링크 트리 생성
-TreeNode* link() {
+
+int main(void)
+{
 	TreeNode* n1, *n2, *n3, *n4, *n5, *n6, *n7, *n8, *n9, *n10, *n11;
 	n1 = (TreeNode*)malloc(sizeof(TreeNode));
 	n2 = (TreeNode*)malloc(sizeof(TreeNode));
@@ -157,17 +146,14 @@ TreeNode* link() {
 	n8->left = NULL;
 	n8->right = NULL;
 
-	return &n1;
-}
-int main(void)
-{
-	TreeNode * linkenode = &n1;
+
+	TreeNode * root = n1;
 	printf("<Traversal with Stack>\n");
 	printf("1. 전위 순회 \n");
-	preorder(linkenode);
+	preorder(root);
 	printf("\n2. 중위 순회 \n ");
-	inorder_iter(linkenode);
+	inorder_iter(root);
 	printf("\n3. 후위 순회 \n ");
-	postorder(linkenode);
+	postorder(root);
 	return 0;
 }
