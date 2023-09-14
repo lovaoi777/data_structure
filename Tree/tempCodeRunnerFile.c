@@ -1,1 +1,2 @@
-y
+
+		push(root->right);
