@@ -6,18 +6,7 @@ typedef struct TreeNode {
 	struct TreeNode* right;
 } TreeNode;
 
-
-// TreeNode n11 = {NULL, 11, NULL};
-// TreeNode n10 = {NULL, 10, NULL};
-// TreeNode n9 = {NULL, 5, NULL};
-// TreeNode n8 = {NULL, 4, NULL};
-// TreeNode n7 = { &n10,9,&n11 };
-// TreeNode n6 = { NULL,8,NULL };
-// TreeNode n5 = { NULL,6,NULL };
-// TreeNode n4 = { &n8,3,&n9 };
-// TreeNode n3 = { &n6,7,&n7 };
-// TreeNode n2 = { &n4,2,&n5 };
-// TreeNode n1 = { &n2,1,&n3 };
+//트리 구조
 TreeNode n1 = {4.00, NULL, NULL};
 TreeNode n2 = {5.00, NULL, NULL};
 TreeNode n3 = {(float)'*', &n1, &n2};
@@ -34,7 +23,7 @@ TreeNode n13 = {(float)'+', &n11,&n12};
 TreeNode* root = &n13;
 
 
-
+//수식트리를 이용한 수식 계산
 float evaluate(TreeNode *root)
 {
 	if (root == NULL)	return 0;
@@ -53,6 +42,7 @@ float evaluate(TreeNode *root)
 	}
 	return 0;
 }
+//노드 개수함수
 int get_node_count(TreeNode *node){
       int count=0;
   if( node != NULL )
