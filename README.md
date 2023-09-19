@@ -4,3 +4,7 @@
 # 9월 14일 반복순회
 
 <img src="./img/Traversal.png" />
+
+# 9월 19일 수식트리
+
+<img src="./img/evaluate.png" />
