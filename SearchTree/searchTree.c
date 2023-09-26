@@ -32,7 +32,6 @@ TreeNode * insert_node(TreeNode * node, int key){
 		node->left = insert_node(node->left, key);
 	else if (key > node->key)
 		node->right = insert_node(node->right, key);
-
 	// 변경된 루트 포인터를 반환한다. 
 	return node;
 }
@@ -68,6 +67,34 @@ TreeNode * delete_node(TreeNode * root, int key)  { // key 노드 삭제 후 루
 	}
 	return root;
 }
+int get_node_count(TreeNode *node)
+{
+  int count=0;
+  if( node != NULL )
+    count = 1 + get_node_count  (node->left)+ 
+	get_node_count(node->right);
+  return count;
+}
+
+void menu(){
+    printf("\n-----------------\n");
+    printf("| s :  검색      |\n");
+    printf("| i : 노드추가    |\n");
+    printf("| d : 노드삭제    |\n");
+    printf("| t : 중위순회    |\n");
+    printf("| I :노드추가(반복)|\n");
+    printf("| D :노드삭제(반복)|\n");
+    printf("| c :종료        |\n");
+    printf("--------------\n");
+}
+void Inorder(TreeNode* root){
+    if(root){
+        Inorder(root->left);
+        printf("%d ",root->key);
+        Inorder(root->right); 
+    }
+}
+
 int main(void) {
 	TreeNode* root = NULL;
 	TreeNode* tmp = NULL;
@@ -84,7 +111,42 @@ int main(void) {
 	root = insert_node(root, 64);
     root = insert_node(root, 65);
     root = insert_node(root, 70);
-    root = insert_node(root, 64);
-    search(root,16);
+    
+    char choice;
+    int num;
+    menu();
+    while(1){
+        printf("\n메뉴입력 :");
+        scanf("%c" ,&choice);
+        switch (choice)
+        {
+        case 's': 
+            printf("\n 검색할 값 입력 :");
+            scanf("%d" ,&num);
+            search(root,num);
+            Inorder(root);
+            break;
+        case 'i': 
+            printf("\n 추가할 값 입력 :");
+            scanf("%d" ,&num);
+            insert_node(root,num);
+            printf("방문한 노드의 수 : %d \n",get_node_count(root));
+            Inorder(root);
+            break;
+        case 'd': 
+            printf("\n 삭제할 값 입력 :");
+            scanf("%d" ,&num);
+            delete_node(root, num);
+            break;
+        case 't': 
+            Inorder(root);
+        case 'c': 
+            break;
+        
+        default:
+            break;
+        }
+
+    }
         return 0;
 }
