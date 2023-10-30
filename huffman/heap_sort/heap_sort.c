@@ -1,92 +1,64 @@
 #include <stdio.h>
-#include <stdlib.h>
-#define MAX_ELEMENT 200
-#define SIZE 17
-typedef struct {
-	int key;
-} element;
 
-typedef struct {
-	element heap[MAX_ELEMENT];
-	int heap_size;
-} HeapType;
-void init(HeapType* h)
-{
-	h->heap_size = 0;
-}
-// 생성 함수
-HeapType* create()
-{
-	return (HeapType*)malloc(sizeof(HeapType));
-}
-int swap(int* a, int* b) {
-    int temp = *a;
+void swap(int* a, int* b) {
+    int t = *a;
     *a = *b;
-    *b = temp;
+    *b = t;
 }
-void insert_max_heap(HeapType *h, element item) 
- {
-    int i; 
-    i = ++(h->heap_size); 
 
-    //  트리를 거슬러 올라가면서 부모 노드와 비교하는 과정
-    while((i != 1) && (item.key > h->heap[i/2].key)) {
-	   h->heap[i] = h->heap[i/2]; 
-       i /= 2; 
-     }
-    h->heap[i] = item;     // 새로운 노드를 삽입
-    
+//최댓 값 구하는 함수
+void heapify(int arr[], int n, int i) {
+    int largest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
 
- }
-element delete_max_heap(HeapType *h) 
-{ 
-    int parent, child; 
-    element item, temp;
+    //왼쪽 비교 후 최댓값 변환
+    if (left < n && arr[left] > arr[largest])
+        largest = left;
 
-    item = h->heap[1];
-    temp = h->heap[(h->heap_size)--];
-    parent = 1;	
-    child = 2;
-    while( child <= h->heap_size ) {
-	  // 현재 노드의 자식노드중 더 큰 자식노드를 찾는다.
-	  if( ( child < h->heap_size ) && 
-	      (h->heap[child].key) < h->heap[child+1].key)
-	      child++;
-	  if( temp.key >= h->heap[child].key ) break;
-	  // 한단계 아래로 이동
-	  h->heap[parent] = h->heap[child];
-	  parent = child;
-	  child *= 2;
+    //오른쪽 비교 후 최댓값 변환
+    if (right < n && arr[right] > arr[largest])
+        largest = right;
+
+    //최댓값이 
+    if (largest != i) {
+        swap(&arr[i], &arr[largest]);
+        heapify(arr, n, largest);
     }
-    h->heap[parent] = temp;
-    return item;
- }
-
-// 우선 순위 큐인 히프를 이용한 정렬
-void heap_sort(element a[], int n)
-{
-	int i;
-	HeapType* h;
-    
-	h = create();
-	init(h);
-	for (i = 0; i<n; i++) {
-		insert_max_heap(h, a[i]);
-	}
-	for (i = (n - 1); i >= 0; i--) {
-		a[i] = delete_max_heap(h);
-	}
-
-	free(h);
 }
 
-int main(void){
-    element list[SIZE] = { 34, 12, 76, 59, 32, 55, 88, 26, 16, 79, 34, 85, 29, 78, 41, 56, 86 };
-	heap_sort(list, SIZE);
+//힙 정렬
+void heapSort(int arr[], int n) {
+    for (int i = n / 2 - 1; i >= 0; i--)
+        heapify(arr, n, i);
+
+    //힙 정렬하는 부분 출력
+    for (int i = 0; i < n; i++) {
+        printf("Step %d: ", i + 1);
+        for (int j = 0; j < n; j++) {
+            printf("%d ", arr[j]);
+        }
+        printf("\n");
+
+        //2개의 정수 변경
+        swap(&arr[0], &arr[n - i - 1]);
+        heapify(arr, n - i - 1, 0);
+    }
+}
+
+int main() {
+    //정렬 할 리스트 선언
+    int arr[] = { 34, 12, 76, 59, 32, 55, 88, 26, 16, 79, 34, 85, 29, 78, 41, 56, 86 };
+    int n = sizeof(arr) / sizeof(arr[0]);
+
+    printf("힙 정렬\n");
+    heapSort(arr, n); //힙 정렬
+
     printf("\n");
-	for (int i = 0; i < SIZE; i++) {
-		printf("%d ", list[i].key);
-	}
-	printf("\n");
+    printf("힙 정렬 후 배열: \n");
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    printf("\n");
+
     return 0;
-    };
+}
