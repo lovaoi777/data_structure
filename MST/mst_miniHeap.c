@@ -11,7 +11,7 @@ int parent[MAX_VERTICES];		// 부모 노드
 							// 초기화
 void set_init(int n)
 {
-	for (int i = 0; i<n; i++) 
+	for (int i = 0; i < n; i++) 
 		parent[i] = -1;
 }
 // curr가 속하는 집합을 반환한다.
@@ -57,12 +57,52 @@ void insert_edge(GraphType* g, int start, int end, int w)
 	g->edges[g->n].weight = w;
 	g->n++;
 }
-// qsort()에 사용되는 함수
-int compare(const void* a, const void* b)
+// miniHeap 구조체
+typedef struct MiniHeap {
+	struct Edge* heap;
+	int capacity;
+	int size;
+} MiniHeap;
+// miniHeap 초기화
+void heap_init(MiniHeap* h, int capacity)
 {
-	struct Edge* x = (struct Edge*)a;
-	struct Edge* y = (struct Edge*)b;
-	return (x->weight - y->weight);
+	h->heap = (struct Edge*)malloc(sizeof(struct Edge) * (capacity + 1));
+	h->capacity = capacity;
+	h->size = 0;
+}
+// 최소 힙 삽입 연산
+void insert_heap(MiniHeap* h, struct Edge item)
+{
+	int i;
+	i = ++(h->size);
+
+	while ((i != 1) && (item.weight < h->heap[i / 2].weight)) {
+		h->heap[i] = h->heap[i / 2];
+		i /= 2;
+	}
+	h->heap[i] = item;
+}
+// 최소 힙 삭제 연산
+struct Edge delete_heap(MiniHeap* h)
+{
+	int parent, child;
+	struct Edge item, temp;
+	item = h->heap[1];
+	temp = h->heap[(h->size)--];
+	parent = 1;
+	child = 2;
+
+	while (child <= h->size) {
+		if ((child < h->size) &&
+			(h->heap[child].weight) > h->heap[child + 1].weight)
+			child++;
+		if (temp.weight <= h->heap[child].weight) break;
+		h->heap[parent] = h->heap[child];
+		parent = child;
+		child *= 2;
+	}
+	h->heap[parent] = temp;
+	return item;
 }
 // kruskal의 최소 비용 신장 트리 프로그램
 void kruskal(GraphType *g)
@@ -72,49 +112,53 @@ void kruskal(GraphType *g)
 	struct Edge e;
 
 	set_init(g->n);				// 집합 초기화
-	qsort(g->edges, g->n, sizeof(struct Edge), compare);
 
-	printf("Kruskal MST Algoritm ( qsort) \n");
-	int i = 0;
+	MiniHeap h;
+	heap_init(&h, g->n);
+	for (int i = 0; i < g->n; i++) {
+		insert_heap(&h, g->edges[i]);
+	}
+
+	printf("Kruskal MST Algoritm (MiniHeap) \n");
 	while (edge_accepted < (g->n - 1))	// 간선의 수 < (n-1)
 	{
-		e = g->edges[i];
+		e = delete_heap(&h);
 		uset = set_find(e.start);		// 정점 u의 집합 번호 
 		vset = set_find(e.end);		// 정점 v의 집합 번호
 		if (uset != vset) {			// 서로 속한 집합이 다르면
-			printf("Edge (%d,%d) Select %d \n", e.start, e.end, e.weight);
+			printf("Edge (%d,%d) Select %d\n", e.start, e.end, e.weight);
 			edge_accepted++;
 			set_union(uset, vset);	// 두개의 집합을 합친다.
 		}
-		i++;
 	}
 }
 int main(void)
 {
-	GraphType *g;
-	g = (GraphType *)malloc(sizeof(GraphType));
+	GraphType* g;
+	g = (GraphType*)malloc(sizeof(GraphType));
 	graph_init(g);
+
 	insert_edge(g, 1, 6, 11);
-    insert_edge(g, 1, 2, 3);
-    insert_edge(g, 1, 7, 12);
-    insert_edge(g, 2,6, 7);
-    insert_edge(g, 6, 5, 9);
-    insert_edge(g, 2, 5, 1);
-    insert_edge(g, 2, 7, 8);
-    insert_edge(g, 2, 3, 5);
-    insert_edge(g, 3, 7, 6);
-    insert_edge(g, 3, 8, 5);
-    insert_edge(g, 7, 8, 13);
-    insert_edge(g, 2, 4, 4);
-    insert_edge(g, 3, 4, 2);
-    insert_edge(g, 4, 8, 14);
-    insert_edge(g, 4, 5, 13);
-    insert_edge(g, 1, 7, 12);
-    insert_edge(g, 4, 10, 16);
-    insert_edge(g, 8, 10, 15);
-    insert_edge(g, 5, 10, 17);
-    insert_edge(g, 5, 9, 18);
-    insert_edge(g, 9, 10, 10);
+	insert_edge(g, 1, 2, 3);
+	insert_edge(g, 1, 7, 12);
+	insert_edge(g, 2, 6, 7);
+	insert_edge(g, 6, 5, 9);
+	insert_edge(g, 2, 5, 1);
+	insert_edge(g, 2, 7, 8);
+	insert_edge(g, 2, 3, 5);
+	insert_edge(g, 3, 7, 6);
+	insert_edge(g, 3, 8, 5);
+	insert_edge(g, 7, 8, 13);
+	insert_edge(g, 2, 4, 4);
+	insert_edge(g, 3, 4, 2);
+	insert_edge(g, 4, 8, 14);
+	insert_edge(g, 4, 5, 13);
+	insert_edge(g, 1, 7, 12);
+	insert_edge(g, 4, 10, 16);
+	insert_edge(g, 8, 10, 15);
+	insert_edge(g, 5, 10, 17);
+	insert_edge(g, 5, 9, 18);
+	insert_edge(g, 9, 10, 10);
 	kruskal(g);
 	free(g);
 	return 0;
