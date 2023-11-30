@@ -1,3 +1,5 @@
-<h1>11_28 과제</h1>
-<h4>merge정렬 알고리즘</h4>
-<img src="./img/merge_sort.png" />
+<h1>11_30 과제</h1>
+<h3>분석내용</h3>
+<h4></h4>
+
+<img src="./img/Quick_Sort.png" />
